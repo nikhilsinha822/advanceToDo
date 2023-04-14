@@ -16,7 +16,7 @@ const Content = ({items, setItems}) => {
     <ul>
         {
             
-            items && items.length !== 0 ?
+            items.length !== 0 ?
             items.map((prop) =>
             <li key={prop.id}>
                 <input 
