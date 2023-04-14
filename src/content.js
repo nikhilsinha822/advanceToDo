@@ -1,13 +1,8 @@
 import { FaBeer } from 'react-icons/fa';
 
-const Content = ({items, setItems, handleCheck}) => {
+const Content = ({items, setItems, handleCheck, handleDelete}) => {
     
     
-    const handleDelete = (id) => {
-        const listItems = items.filter((prop) => id !== prop.id)
-        setItems(listItems);
-        localStorage.setItem('shoppinglist', JSON.stringify(listItems));
-    }
     return <>
     <ul>
         {

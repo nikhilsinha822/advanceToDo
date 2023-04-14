@@ -7,7 +7,6 @@ import SearchBar from "./searchBar";
 import apiRequest from "./apiRequest";
 
 function App() {
-
   const API_URL = "http://localhost:3500/items";
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
@@ -28,11 +27,10 @@ function App() {
         setIsLoading(false);
       }
     };
-     setTimeout(() => fetchitems(), 1000);
-      //fetchitems();
+    setTimeout(() => fetchitems(), 1000);
+    //fetchitems();
   }, []);
 
- 
   const addItem = async (item) => {
     const myNewItem = { id: items.length + 1, checked: false, item: item };
     const list = [...items, myNewItem];
@@ -47,28 +45,40 @@ function App() {
     };
 
     const result = await apiRequest(API_URL, postOptions);
-    if(result) setFetchError(result)
+    if (result) setFetchError(result);
   };
 
   const handleCheck = async (id) => {
-    const listItems = items.map((prop) => prop.id === id ? {...prop, checked: !prop.checked}: {...prop})
+    const listItems = items.map((prop) =>
+      prop.id === id ? { ...prop, checked: !prop.checked } : { ...prop }
+    );
     setItems(listItems);
     //localStorage.setItem('shoppinglist', JSON.stringify(listItems));
-    const myItem = listItems.filter((item)=> item.id === id)
+    const myItem = listItems.filter((item) => item.id === id);
     const updateOpotions = {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ checked: myItem[0].checked})
-    }
-    const reqUrl = `${API_URL}/${id}`
-    const result = await apiRequest(reqUrl, updateOpotions)
-    if(result) setFetchError(result);
+      body: JSON.stringify({ checked: myItem[0].checked }),
+    };
+    const reqUrl = `${API_URL}/${id}`;
+    const result = await apiRequest(reqUrl, updateOpotions);
+    if (result) setFetchError(result);
+  };
 
-}
+  const handleDelete = async (id) => {
+    const listItems = items.filter((prop) => id !== prop.id);
+    setItems(listItems);
+    //localStorage.setItem('shoppinglist', JSON.stringify(listItems));
 
-
+    const deleteOptions = {
+      method: "DELETE",
+    };
+    const reqUrl = `${API_URL}/${id}`;
+    const result = await apiRequest(reqUrl, deleteOptions);
+    if (result) setFetchError(result);
+  };
 
   return (
     <>
@@ -88,6 +98,7 @@ function App() {
               item.item.toLowerCase().includes(search.toLowerCase())
             )}
             handleCheck={handleCheck}
+            handleDelete={handleDelete}
             setItems={setItems}
           />
         )}
