@@ -3,9 +3,9 @@ import { useState,useEffect } from "react"
 
 const AddItem = ({items, setItems, addItem}) => {
     const [item,setItem] = useState("");
-    useEffect(()=>{
-        localStorage.setItem('shoppinglist', JSON.stringify(items));
-    },[items])
+    // useEffect(()=>{
+    //     localStorage.setItem('shoppinglist', JSON.stringify(items));
+    // },[items])
     const handleSubmit = (e) => {
         setItem(e.target.value)
         addItem(item)

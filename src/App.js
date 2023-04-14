@@ -20,7 +20,7 @@ function App() {
         const response = await fetch(API_URL);
         if (!response.ok) throw Error("Did not receive expected data");
         const listItems = await response.json();
-        console.log(listItems);
+        //console.log(listItems);
         setItems(listItems);
       } catch (err) {
         setFetchError(err.message);
@@ -28,8 +28,8 @@ function App() {
         setIsLoading(false);
       }
     };
-    setTimeout(() => fetchitems(), 1000);
-
+     setTimeout(() => fetchitems(), 1000);
+      //fetchitems();
   }, []);
 
  
@@ -50,6 +50,26 @@ function App() {
     if(result) setFetchError(result)
   };
 
+  const handleCheck = async (id) => {
+    const listItems = items.map((prop) => prop.id === id ? {...prop, checked: !prop.checked}: {...prop})
+    setItems(listItems);
+    //localStorage.setItem('shoppinglist', JSON.stringify(listItems));
+    const myItem = listItems.filter((item)=> item.id === id)
+    const updateOpotions = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ checked: myItem[0].checked})
+    }
+    const reqUrl = `${API_URL}/${id}`
+    const result = await apiRequest(reqUrl, updateOpotions)
+    if(result) setFetchError(result);
+
+}
+
+
+
   return (
     <>
       <Header title="List Of Items" />
@@ -57,6 +77,7 @@ function App() {
       <SearchBar search={search} setSearch={setSearch} />
 
       <AddItem items={items} setItems={setItems} addItem={addItem} />
+
       <main>
         {isLoading && <p>Loading ...</p>}
         {fetchError && <p style={{ color: "red" }}>{`Error: ${fetchError}`}</p>}
@@ -66,6 +87,7 @@ function App() {
             items={items.filter((item) =>
               item.item.toLowerCase().includes(search.toLowerCase())
             )}
+            handleCheck={handleCheck}
             setItems={setItems}
           />
         )}
